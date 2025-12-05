@@ -1,0 +1,23 @@
+name: Enforce Pull Requests Sequence on Core Branches
+
+on:
+  pull_request:
+    branches:
+      - main
+      - preview
+      - qa
+
+jobs:
+  enforce-core-branches-sequence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check source branch
+        run: |
+          BASE="${{ github.base_ref }}"
+          HEAD="${{ github.head_ref }}"
+
+          case "$BASE" in
+            qa)      [ "$HEAD" = "dev" ] || { echo "❌ Only dev → qa allowed"; exit 1; } ;;
+            preview) [ "$HEAD" = "qa" ] || { echo "❌ Only qa → preview allowed"; exit 1; } ;;
+            main)    [ "$HEAD" = "preview" ] || { echo "❌ Only preview → main allowed"; exit 1; } ;;
+          esac

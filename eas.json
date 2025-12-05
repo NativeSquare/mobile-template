@@ -1,0 +1,52 @@
+{
+  "cli": {
+    "version": ">= 16.12.0",
+    "appVersionSource": "remote",
+    "requireCommit": true
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development",
+      "env": {
+        "APP_VARIANT": "development"
+      }
+    },
+    "qa": {
+      "distribution": "internal",
+      "channel": "qa",
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "qa",
+        "EXPO_PUBLIC_CONVEX_URL": "https://bright-sandpiper-121.convex.cloud"
+      }
+    },
+    "preview": {
+      "distribution": "store",
+      "channel": "preview",
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "preview"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "preview": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "completed"
+      }
+    },
+    "production": {
+      "android": {
+        "track": "alpha",
+        "releaseStatus": "completed"
+      }
+    }
+  }
+}

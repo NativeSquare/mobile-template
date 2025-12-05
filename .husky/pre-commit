@@ -1,0 +1,1 @@
+pnpm tsx scripts/block-pushes-on-core-branches.ts
