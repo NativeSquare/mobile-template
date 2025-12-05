@@ -1,6 +1,6 @@
 import Resend from "@auth/core/providers/resend";
 import { RandomReader, generateRandomString } from "@oslojs/crypto/random";
-import { sendEmailRaw } from "./emailUtils";
+import { sendEmail } from "../src/utils/sendEmail";
 
 export const ResendOTPPasswordReset = Resend({
   id: "resend-otp",
@@ -17,7 +17,7 @@ export const ResendOTPPasswordReset = Resend({
     return generateRandomString(random, alphabet, length);
   },
   async sendVerificationRequest({ identifier: email, provider, token }) {
-    await sendEmailRaw({
+    await sendEmail({
       from: "My App <onboarding@dev.nativesquare.fr>",
       to: [email],
       subject: `Reset your password in My App`,
