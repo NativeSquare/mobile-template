@@ -6,34 +6,34 @@ const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
-    return "com.findr.mobile.dev";
+    return "com.example.mobile.dev";
   }
 
   if (IS_QA) {
-    return "com.findr.mobile.qa";
+    return "com.example.mobile.qa";
   }
 
   if (IS_PREVIEW) {
-    return "com.findr.mobile.preview";
+    return "com.example.mobile.preview";
   }
 
-  return "com.findr.mobile";
+  return "com.example.mobile";
 };
 
 const getAppName = () => {
   if (IS_DEV) {
-    return "FindR (Dev)";
+    return "Example (Dev)";
   }
 
   if (IS_QA) {
-    return "FindR (QA)";
+    return "Example (QA)";
   }
 
   if (IS_PREVIEW) {
-    return "FindR (Preview)";
+    return "Example (Preview)";
   }
 
-  return "FindR";
+  return "Example";
 };
 
 export const getGoogleServicesJson = () => {
@@ -54,11 +54,11 @@ export const getGoogleServicesJson = () => {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   name: getAppName(),
-  slug: "Findr",
+  slug: "Example",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: "findr",
+  scheme: "example",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {

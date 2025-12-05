@@ -53,7 +53,7 @@ export function SocialConnections({
       if (result.type === "success") {
         const { url } = result;
         const code = new URL(url).searchParams.get("code")!;
-        await signIn(strategy.provider, { code, redirectTo: "findr://" });
+        await signIn(strategy.provider, { code, redirectTo: "example://" });
       }
     } catch (error) {
       setError(getConvexErrorMessage(error));
