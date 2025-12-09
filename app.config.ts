@@ -1,16 +1,11 @@
 import { ConfigContext, ExpoConfig } from "expo/config";
 
 const IS_DEV = process.env.APP_VARIANT === "development";
-const IS_QA = process.env.APP_VARIANT === "qa";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
     return "com.example.mobile.dev";
-  }
-
-  if (IS_QA) {
-    return "com.example.mobile.qa";
   }
 
   if (IS_PREVIEW) {
@@ -25,10 +20,6 @@ const getAppName = () => {
     return "Example (Dev)";
   }
 
-  if (IS_QA) {
-    return "Example (QA)";
-  }
-
   if (IS_PREVIEW) {
     return "Example (Preview)";
   }
@@ -39,10 +30,6 @@ const getAppName = () => {
 export const getGoogleServicesJson = () => {
   if (IS_DEV) {
     return "./google-services-dev.json";
-  }
-
-  if (IS_QA) {
-    return "./google-services-qa.json";
   }
 
   if (IS_PREVIEW) {
@@ -106,14 +93,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: "nativesquare-expo",
   extra: {
     router: {},
-    eas: {
-      projectId: "be4ff23d-07e9-4524-bb48-d7056e34337f",
-    },
   },
   runtimeVersion: {
     policy: "appVersion",
-  },
-  updates: {
-    url: "https://u.expo.dev/be4ff23d-07e9-4524-bb48-d7056e34337f",
   },
 });
