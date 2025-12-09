@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Text } from "@/components/ui/text";
 import { VerifyEmailSchema } from "@/validation/auth";
@@ -15,6 +14,7 @@ import { useRouter } from "expo-router";
 import * as React from "react";
 import { ActivityIndicator, View } from "react-native";
 import z from "zod";
+import { OTPInput } from "../custom/otp-input";
 
 export function VerifyEmailForm({ email }: { email: string }) {
   const [code, setCode] = React.useState("");
@@ -26,12 +26,13 @@ export function VerifyEmailForm({ email }: { email: string }) {
   const router = useRouter();
   const { signIn } = useAuthActions();
 
-  async function onSubmit() {
+  async function onSubmit(submittedCode?: string) {
+    const value = submittedCode ?? code;
     setFormError(null);
     setFieldErrors({});
 
     // Field Validation
-    const result = VerifyEmailSchema.safeParse({ code });
+    const result = VerifyEmailSchema.safeParse({ code: value });
     if (!result.success) {
       const tree = z.treeifyError(result.error);
 
@@ -46,7 +47,7 @@ export function VerifyEmailForm({ email }: { email: string }) {
     try {
       await signIn("password", {
         email,
-        code,
+        code: value,
         flow: "email-verification",
       });
     } catch (error) {
@@ -74,16 +75,11 @@ export function VerifyEmailForm({ email }: { email: string }) {
           <View className="gap-6">
             <View className="gap-1.5">
               <Label htmlFor="code">Verification code</Label>
-              <Input
-                id="code"
-                autoCapitalize="none"
-                returnKeyType="send"
-                keyboardType="numeric"
-                autoComplete="sms-otp"
-                textContentType="oneTimeCode"
-                onSubmitEditing={onSubmit}
-                value={code}
-                onChangeText={setCode}
+              <OTPInput
+                onTextChange={setCode}
+                onFilled={(text) => {
+                  onSubmit(text);
+                }}
               />
               {fieldErrors.code && (
                 <Text className="text-xs text-destructive mt-1">
@@ -94,7 +90,7 @@ export function VerifyEmailForm({ email }: { email: string }) {
             <View className="gap-3">
               <Button
                 className="w-full"
-                onPress={onSubmit}
+                onPress={() => onSubmit()}
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -118,42 +114,4 @@ export function VerifyEmailForm({ email }: { email: string }) {
       </Card>
     </View>
   );
-}
-
-function useCountdown(seconds = 30) {
-  const [countdown, setCountdown] = React.useState(seconds);
-  const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const startCountdown = React.useCallback(() => {
-    setCountdown(seconds);
-
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
-    intervalRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }, [seconds]);
-
-  React.useEffect(() => {
-    startCountdown();
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [startCountdown]);
-
-  return { countdown, restartCountdown: startCountdown };
 }

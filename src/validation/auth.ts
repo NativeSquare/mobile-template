@@ -24,7 +24,7 @@ export const SignUpSchema = z.object({
 export type SignUpInput = z.infer<typeof SignUpSchema>;
 
 export const VerifyEmailSchema = z.object({
-  code: z.string().min(1, "Code is required"),
+  code: z.string().length(6, "Code is incomplete"),
 });
 
 export type VerifyEmailInput = z.infer<typeof VerifyEmailSchema>;

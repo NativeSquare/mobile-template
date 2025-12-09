@@ -6,15 +6,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Text } from "@/components/ui/text";
-import { getConvexErrorMessage } from "@/utils/getConvexErrorMessage";
 import { ResetPasswordSchema } from "@/validation/auth";
 import { useAuthActions } from "@convex-dev/auth/react";
 import * as React from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import z from "zod";
+import { OTPInput } from "../custom/otp-input";
 import { PasswordInput } from "../custom/password-input";
 
 export function ResetPasswordForm({ email }: { email: string }) {
@@ -33,12 +32,13 @@ export function ResetPasswordForm({ email }: { email: string }) {
     codeInputRef.current?.focus();
   }
 
-  async function onSubmit() {
+  async function onSubmit(submittedCode?: string) {
+    const value = submittedCode ?? code;
     setFormError(null);
     setFieldErrors({});
 
     // Field Validation
-    const result = ResetPasswordSchema.safeParse({ newPassword, code });
+    const result = ResetPasswordSchema.safeParse({ newPassword, code: value });
     if (!result.success) {
       const tree = z.treeifyError(result.error);
 
@@ -53,13 +53,13 @@ export function ResetPasswordForm({ email }: { email: string }) {
     setIsLoading(true);
     try {
       await signIn("password", {
-        code,
+        code: value,
         newPassword,
         email,
         flow: "reset-verification",
       });
     } catch (error) {
-      setFormError(getConvexErrorMessage(error));
+      setFormError("Invalid verification code");
     } finally {
       setIsLoading(false);
     }
@@ -102,16 +102,12 @@ export function ResetPasswordForm({ email }: { email: string }) {
             </View>
             <View className="gap-1.5">
               <Label htmlFor="code">Verification code</Label>
-              <Input
-                id="code"
-                autoCapitalize="none"
-                returnKeyType="send"
-                keyboardType="numeric"
-                autoComplete="sms-otp"
-                textContentType="oneTimeCode"
-                onSubmitEditing={onSubmit}
-                value={code}
-                onChangeText={setCode}
+              <OTPInput
+                autoFocus={false}
+                onTextChange={setCode}
+                onFilled={(text) => {
+                  onSubmit(text);
+                }}
               />
               {fieldErrors.code && (
                 <Text className="text-xs text-destructive mt-1">
@@ -119,7 +115,11 @@ export function ResetPasswordForm({ email }: { email: string }) {
                 </Text>
               )}
             </View>
-            <Button className="w-full" onPress={onSubmit} disabled={isLoading}>
+            <Button
+              className="w-full"
+              onPress={() => onSubmit()}
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <ActivityIndicator color="white" />
               ) : (
