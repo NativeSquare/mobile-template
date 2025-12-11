@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { api } from "@convex/_generated/api";
 import { useQuery } from "convex/react";
 import { ScrollView, View } from "react-native";
-import { api } from "../../../../convex/_generated/api";
 
 export default function Home() {
   const user = useQuery(api.functions.currentUser);
