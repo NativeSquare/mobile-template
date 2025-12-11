@@ -16,7 +16,7 @@
     "migrate": "npx convex run migrations:runAll",
     "migrate:dryrun": "npx convex run migrations:runAll \"{dryRun: true}\"",
     "migrate:status": "npx convex run --component migrations lib:getStatus",
-    "deploy:preview": "dotenv -e .env -- npx convex deploy --preview-create preview",
+    "deploy:preview": "dotenv -e .env.preview -- npx convex deploy --preview-create preview",
     "deploy:prod": "npx convex deploy --prod"
   },
   "dependencies": {

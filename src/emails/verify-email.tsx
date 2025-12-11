@@ -1,4 +1,3 @@
-import { APP_ADDRESS, APP_NAME } from "@constants";
 import {
   Body,
   Container,
@@ -9,6 +8,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { APP_ADDRESS, APP_NAME } from "../../constants";
 
 interface VerifyEmailProps {
   code?: string;

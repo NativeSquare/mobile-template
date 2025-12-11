@@ -4,8 +4,7 @@
     "strict": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@convex/*": ["./convex/*"],
-      "@constants": ["./constants.ts"]
+      "@convex/*": ["./convex/*"]
     }
   },
   "skipLibCheck": true,

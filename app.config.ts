@@ -1,30 +1,31 @@
 import { ConfigContext, ExpoConfig } from "expo/config";
+import { APP_NAME, APP_SLUG } from "./constants";
 
 const IS_DEV = process.env.APP_VARIANT === "development";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
-    return "com.example.mobile.dev";
+    return `com.${APP_SLUG}.dev`;
   }
 
   if (IS_PREVIEW) {
-    return "com.example.mobile.preview";
+    return `com.${APP_SLUG}.preview`;
   }
 
-  return "com.example.mobile";
+  return `com.${APP_SLUG}`;
 };
 
 const getAppName = () => {
   if (IS_DEV) {
-    return "Example (Dev)";
+    return `${APP_NAME} (Dev)`;
   }
 
   if (IS_PREVIEW) {
-    return "Example (Preview)";
+    return `${APP_NAME} (Preview)`;
   }
 
-  return "Example";
+  return APP_NAME;
 };
 
 export const getGoogleServicesJson = () => {
@@ -41,11 +42,11 @@ export const getGoogleServicesJson = () => {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   name: getAppName(),
-  slug: "Example",
+  slug: APP_SLUG,
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: "example",
+  scheme: APP_SLUG,
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {

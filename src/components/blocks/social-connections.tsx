@@ -7,6 +7,7 @@ import { openAuthSessionAsync } from "expo-web-browser";
 import { useColorScheme } from "nativewind";
 import * as React from "react";
 import { ActivityIndicator, Image, Platform, View } from "react-native";
+import { APP_SLUG } from "../../../constants";
 
 const SOCIAL_CONNECTION_STRATEGIES = [
   {
@@ -53,7 +54,7 @@ export function SocialConnections({
       if (result.type === "success") {
         const { url } = result;
         const code = new URL(url).searchParams.get("code")!;
-        await signIn(strategy.provider, { code, redirectTo: "example://" });
+        await signIn(strategy.provider, { code, redirectTo: `${APP_SLUG}://` });
       }
     } catch (error) {
       setError(getConvexErrorMessage(error));
