@@ -62,7 +62,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
-    googleServicesFile: getGoogleServicesJson(),
+    // googleServicesFile: getGoogleServicesJson(),
   },
   web: {
     output: "static",
@@ -70,10 +70,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundler: "metro",
   },
   plugins: [
+    "expo-camera",
+    "expo-clipboard",
+    "expo-image-picker",
+    "expo-media-library",
+    "expo-notifications",
     "expo-router",
     "expo-secure-store",
-    "expo-notifications",
-    "expo-image-picker",
     [
       "expo-splash-screen",
       {
