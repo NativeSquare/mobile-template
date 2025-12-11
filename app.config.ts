@@ -71,7 +71,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-camera",
-    "expo-clipboard",
     "expo-image-picker",
     "expo-media-library",
     "expo-notifications",
