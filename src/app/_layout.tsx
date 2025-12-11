@@ -5,6 +5,7 @@ import { ConvexReactClient, useConvexAuth } from "convex/react";
 import { Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { ActivityIndicator, Platform, View } from "react-native";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
 
@@ -20,19 +21,21 @@ const secureStorage = {
 
 export default function RootLayout() {
   return (
-    <ConvexAuthProvider
-      client={convex}
-      storage={
-        Platform.OS === "android" || Platform.OS === "ios"
-          ? secureStorage
-          : undefined
-      }
-    >
-      <SafeAreaProvider>
-        <RootStack />
-        <PortalHost />
-      </SafeAreaProvider>
-    </ConvexAuthProvider>
+    <KeyboardProvider>
+      <ConvexAuthProvider
+        client={convex}
+        storage={
+          Platform.OS === "android" || Platform.OS === "ios"
+            ? secureStorage
+            : undefined
+        }
+      >
+        <SafeAreaProvider>
+          <RootStack />
+          <PortalHost />
+        </SafeAreaProvider>
+      </ConvexAuthProvider>
+    </KeyboardProvider>
   );
 }
 

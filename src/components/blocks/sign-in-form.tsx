@@ -14,12 +14,12 @@ import { Text } from "@/components/ui/text";
 import { getConvexErrorMessage } from "@/utils/getConvexErrorMessage";
 import { SignInSchema } from "@/validation/auth";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { api } from "@convex/_generated/api";
 import { useConvex } from "convex/react";
 import { useRouter } from "expo-router";
 import * as React from "react";
 import { ActivityIndicator, type TextInput, View } from "react-native";
 import z from "zod";
-import { api } from "../../../convex/_generated/api";
 import { PasswordInput } from "../custom/password-input";
 
 export function SignInForm() {
