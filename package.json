@@ -6,6 +6,7 @@
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
     "dev:frontend": "cross-env APP_VARIANT=development npx expo start",
     "dev:backend": "npx convex dev",
+    "dev:email": "email dev --dir ./src/emails",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
@@ -24,6 +25,8 @@
     "@convex-dev/migrations": "^0.3.1",
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5.2.8",
+    "@react-email/components": "1.0.1",
+    "@react-email/render": "2.0.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
@@ -98,6 +101,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@react-email/preview-server": "5.0.7",
     "@types/react": "~19.1.0",
     "cross-env": "^10.1.0",
     "dotenv-cli": "^11.0.0",
@@ -105,6 +109,7 @@
     "eslint-config-expo": "~10.0.0",
     "npm-run-all2": "^8.0.4",
     "prettier-plugin-tailwindcss": "^0.5.14",
+    "react-email": "5.0.7",
     "tailwindcss": "^3.4.18",
     "tsx": "^4.20.6",
     "typescript": "~5.9.2"
