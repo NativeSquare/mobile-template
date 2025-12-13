@@ -1,6 +1,7 @@
+import { Icon } from "@/components/ui/icon";
 import { THEME } from "@/lib/theme";
-import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { House, User } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -32,11 +33,7 @@ export default function TabsLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              color={color}
-              size={24}
-            />
+            <Icon as={House} color={color} size={28} />
           ),
         }}
       />
@@ -45,11 +42,7 @@ export default function TabsLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "person" : "person-outline"}
-              color={color}
-              size={24}
-            />
+            <Icon as={User} color={color} size={28} />
           ),
         }}
       />

@@ -15,5 +15,6 @@ export default defineSchema({
     isAnonymous: v.optional(v.boolean()),
 
     // other "users" fields...
+    hasCompletedOnboarding: v.optional(v.boolean()),
   }).index("email", ["email"]),
 });
