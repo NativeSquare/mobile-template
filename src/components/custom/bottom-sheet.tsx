@@ -1,7 +1,3 @@
-// ================================================================================ //
-// ======================== Default Bottom Sheet Component ======================== //
-// ================================================================================ //
-
 import { THEME } from "@/lib/theme";
 import {
   BottomSheetBackdrop as GorhomBottomSheetBackdrop,
@@ -12,34 +8,35 @@ import { useColorScheme } from "nativewind";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface Definition ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
 interface BottomSheetModalProps {
   ref: React.RefObject<GorhomBottomSheetModal | null>;
   children: React.ReactNode;
 }
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Component Definition ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 export type BottomSheetModalType = BottomSheetModalProps;
 
 export function BottomSheetModal({ ref, children }: BottomSheetModalProps) {
   const { colorScheme } = useColorScheme();
   const insets = useSafeAreaInsets();
+
+  const input = THEME[colorScheme ?? "light"].input;
+
   return (
     <GorhomBottomSheetModal
       ref={ref}
+      backgroundStyle={{
+        backgroundColor:
+          colorScheme === "dark"
+            ? "#121212"
+            : THEME[colorScheme ?? "light"].background,
+      }}
       handleIndicatorStyle={{
-        backgroundColor: THEME[colorScheme ?? "light"].mutedForeground,
+        backgroundColor: THEME[colorScheme ?? "light"].secondary,
         width: 40,
         height: 5,
       }}
       handleStyle={{
-        backgroundColor: THEME[colorScheme ?? "light"].muted,
+        backgroundColor: colorScheme === "dark" ? "#121212" : input,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
       }}
@@ -52,7 +49,7 @@ export function BottomSheetModal({ ref, children }: BottomSheetModalProps) {
         />
       )}
     >
-      <GorhomBottomSheetView className={`pb-[${insets.bottom}px] bg-input`}>
+      <GorhomBottomSheetView className={`pb-[${insets.bottom}px]`}>
         {children}
       </GorhomBottomSheetView>
     </GorhomBottomSheetModal>
