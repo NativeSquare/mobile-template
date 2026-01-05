@@ -12,7 +12,9 @@ import { ChevronLeft } from "lucide-react-native";
 import React from "react";
 import { ScrollView, View } from "react-native";
 
-export type OnboardingFormData = Partial<Pick<Doc<"users">, "image" | "name">>;
+export type OnboardingFormData = Partial<
+  Omit<Doc<"users">, "_id" | "_creationTime">
+>;
 
 export default function Onboarding() {
   const { signOut } = useAuthActions();
