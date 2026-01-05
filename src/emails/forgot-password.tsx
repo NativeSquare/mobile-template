@@ -21,18 +21,12 @@ export const ForgotPassword = ({ code }: ForgotPasswordProps) => (
       <Body className="bg-white font-plaid">
         <Preview>Reset your password</Preview>
         <Container className="px-3 mx-auto">
-          {/* <Img
-            src={`${baseUrl}/static/notion-logo.png`}
-            width="32"
-            height="32"
-            alt={`${APP_NAME}'s Logo`}
-          /> */}
           <Text className="text-[#51525C] text-sm my-2">Hi there,</Text>
           <Text className="text-[#51525C] text-sm my-2">
             To reset your password, please use the following code:
           </Text>
           <Text className="text-[#51525C] text-semibold text-3xl my-6">
-            <strong>{code}</strong>
+            <strong data-testid="verification-code">{code}</strong>
           </Text>
           <Text className="text-[#51525C] text-sm my-2">
             This code will only be valid for the next 5 minutes.

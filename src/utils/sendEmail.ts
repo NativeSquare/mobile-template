@@ -8,7 +8,16 @@ export async function sendEmail(
   const isDev = process.env.IS_DEV === "true";
 
   if (isDev) {
-    console.log("[DEV EMAIL]", params);
+    // Extract verification code from HTML if it's a verification email
+    if (params.html && typeof params.html === "string") {
+      const codeMatch = params.html.match(
+        /<strong[^>]*data-testid="verification-code"[^>]*>([^<]+)<\/strong>/
+      );
+      if (codeMatch) {
+        console.log("Code found: ", codeMatch[1]);
+      }
+    }
+
     return;
   }
 
