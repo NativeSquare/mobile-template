@@ -5,6 +5,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "@convex/_generated/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, Pressable, ScrollView, View } from "react-native";
 
@@ -78,6 +79,7 @@ function SettingsGroup({
 }
 
 export default function Profile() {
+  const router = useRouter();
   const { signOut } = useAuthActions();
   const user = useQuery(api.functions.currentUser);
 
@@ -104,7 +106,7 @@ export default function Profile() {
           Account
         </Text>
 
-        <View className="bg-card flex-row items-center gap-4 rounded-2xl border shadow-sm shadow-black/5">
+        <View className="bg-card flex-row items-center gap-4 rounded-2xl shadow-sm shadow-black/5">
           <Avatar alt={displayName} className="size-14">
             {user?.image ? (
               <AvatarImage source={{ uri: user.image }} />
@@ -125,7 +127,11 @@ export default function Profile() {
         <SettingsGroup
           title="Account"
           items={[
-            { label: "Profile", icon: "person-outline", onPress: () => {} },
+            {
+              label: "Profile",
+              icon: "person-outline",
+              onPress: () => router.push("/settings/edit"),
+            },
             { label: "Billing", icon: "card-outline", onPress: () => {} },
           ]}
         />
@@ -136,7 +142,7 @@ export default function Profile() {
             {
               label: "Appearance",
               icon: "color-palette-outline",
-              onPress: () => {},
+              onPress: () => router.push("/settings/appearance"),
             },
             { label: "Language", icon: "language-outline", onPress: () => {} },
           ]}

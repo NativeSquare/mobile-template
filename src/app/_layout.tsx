@@ -1,4 +1,5 @@
 import "@/lib/nativewind-interop";
+import { ThemeStatusBar } from "@/lib/theme-status-bar";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { api } from "@convex/_generated/api";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -36,6 +37,7 @@ export default function RootLayout() {
         <GestureHandlerRootView>
           <BottomSheetModalProvider>
             <SafeAreaProvider>
+              <ThemeStatusBar />
               <RootStack />
               <PortalHost />
             </SafeAreaProvider>
