@@ -42,7 +42,7 @@ export const getGoogleServicesJson = () => {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   name: getAppName(),
-  slug: APP_SLUG,
+  slug: APP_NAME,
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",

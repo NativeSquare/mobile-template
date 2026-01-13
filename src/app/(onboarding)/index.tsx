@@ -18,15 +18,10 @@ export type OnboardingFormData = Partial<
 
 export default function Onboarding() {
   const { signOut } = useAuthActions();
-  const user = useQuery(api.functions.currentUser);
+  const user = useQuery(api.users.currentUser);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [formData, setFormData] = React.useState<OnboardingFormData>({});
-  const markOnboardingCompleted = useMutation(
-    api.functions.markOnboardingCompleted
-  );
-  const updateUserAfterOnboarding = useMutation(
-    api.functions.updateUserAfterOnboarding
-  );
+  const patchUser = useMutation(api.users.patch);
 
   const steps = [
     { component: AddPhotoStep, id: "photos", canSkip: true },
@@ -52,13 +47,13 @@ export default function Onboarding() {
 
   const handleSkip = () => {
     if (!user?._id) return;
-    markOnboardingCompleted({ userId: user._id });
+    patchUser({ id: user._id, data: { hasCompletedOnboarding: true } });
   };
 
   const handleComplete = () => {
     if (!user?._id) return;
-    updateUserAfterOnboarding({ userId: user._id, data: formData });
-    markOnboardingCompleted({ userId: user._id });
+    patchUser({ id: user._id, data: formData });
+    patchUser({ id: user._id, data: { hasCompletedOnboarding: true } });
   };
 
   const renderHeader = () => {

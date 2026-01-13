@@ -8,13 +8,13 @@
  * @module
  */
 
-import type * as ResendOTP from "../ResendOTP.js";
-import type * as ResendOTPPasswordReset from "../ResendOTPPasswordReset.js";
 import type * as auth from "../auth.js";
 import type * as email from "../email.js";
 import type * as emailUtils from "../emailUtils.js";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
+import type * as ResendOTP from "../lib/auth/ResendOTP.js";
+import type * as ResendOTPPasswordReset from "../lib/auth/ResendOTPPasswordReset.js";
 import type * as migrations from "../migrations.js";
 
 import type {

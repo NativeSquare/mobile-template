@@ -58,7 +58,7 @@ export function SignInForm() {
     }
 
     // Check if account exists
-    const user = await convex.query(api.functions.getUserByEmail, {
+    const user = await convex.query(api.users.getUserByEmail, {
       email: email,
     });
     if (!user) {

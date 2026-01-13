@@ -81,7 +81,7 @@ function SettingsGroup({
 export default function Profile() {
   const router = useRouter();
   const { signOut } = useAuthActions();
-  const user = useQuery(api.functions.currentUser);
+  const user = useQuery(api.users.currentUser);
 
   const displayName = user?.name || "Guest";
   const displayEmail = user?.email || "guest@example.com";

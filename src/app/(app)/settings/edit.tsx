@@ -21,7 +21,7 @@ import {
 
 export default function EditProfileScreen() {
   const router = useRouter();
-  const user = useQuery(api.functions.currentUser);
+  const user = useQuery(api.users.currentUser);
   const [name, setName] = React.useState(user?.name ?? "");
   const [photoUri, setPhotoUri] = React.useState<string | null>(
     user?.image ?? null
