@@ -1,6 +1,6 @@
+import { DataModel } from "@convex/_generated/dataModel";
+import { mutation, query } from "@convex/_generated/server";
 import { GenericValidator, v } from "convex/values";
-import type { DataModel } from "../_generated/dataModel";
-import { mutation, query } from "../_generated/server";
 
 export function generateFunctions<
   TableName extends keyof DataModel,

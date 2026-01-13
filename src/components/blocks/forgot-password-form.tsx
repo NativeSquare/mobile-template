@@ -47,7 +47,7 @@ export function ForgotPasswordForm() {
     }
 
     // Check if account exists
-    const user = await convex.query(api.users.getUserByEmail, {
+    const user = await convex.query(api.table.users.getUserByEmail, {
       email: email,
     });
     if (!user) {

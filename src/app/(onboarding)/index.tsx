@@ -18,10 +18,10 @@ export type OnboardingFormData = Partial<
 
 export default function Onboarding() {
   const { signOut } = useAuthActions();
-  const user = useQuery(api.users.currentUser);
+  const user = useQuery(api.table.users.currentUser);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [formData, setFormData] = React.useState<OnboardingFormData>({});
-  const patchUser = useMutation(api.users.patch);
+  const patchUser = useMutation(api.table.users.patch);
 
   const steps = [
     { component: AddPhotoStep, id: "photos", canSkip: true },

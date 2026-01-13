@@ -50,7 +50,7 @@ export default function RootLayout() {
 
 function RootStack() {
   const { isAuthenticated, isLoading } = useConvexAuth();
-  const user = useQuery(api.users.currentUser);
+  const user = useQuery(api.table.users.currentUser);
   const hasCompletedOnboarding = user?.hasCompletedOnboarding ?? false;
 
   if (isLoading) {
