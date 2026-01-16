@@ -106,7 +106,7 @@ export default function Profile() {
           Account
         </Text>
 
-        <View className="bg-card flex-row items-center gap-4 rounded-2xl shadow-sm shadow-black/5">
+        <View className="flex-row items-center gap-4 rounded-2xl">
           <Avatar alt={displayName} className="size-14">
             {user?.image ? (
               <AvatarImage source={{ uri: user.image }} />

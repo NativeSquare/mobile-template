@@ -1,8 +1,8 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
-import { generateFunctions } from "../../src/lib/convex/generate-functions";
 import { query } from "../_generated/server";
+import { generateFunctions } from "../utils/generateFunctions";
 
 const documentSchema = {
   // DO NOT REMOVE THESE FIELDS : https://labs.convex.dev/auth/setup/schema#customizing-the-users-table

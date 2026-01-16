@@ -64,14 +64,14 @@ export function SocialConnections({
   }
 
   return (
-    <View className="gap-2 sm:flex-row sm:gap-3">
+    <View className="flex-row justify-center gap-6">
       {SOCIAL_CONNECTION_STRATEGIES.map((strategy) => {
         return (
           <Button
             key={strategy.provider}
             variant="outline"
-            size="sm"
-            className="sm:flex-1"
+            size="icon"
+            className="h-14 w-14 rounded-xl border-border/50"
             onPress={async () => {
               await handleSocialSignIn(strategy);
             }}
@@ -82,7 +82,7 @@ export function SocialConnections({
             ) : (
               <Image
                 className={cn(
-                  "size-4",
+                  "size-6",
                   strategy.useTint && Platform.select({ web: "dark:invert" })
                 )}
                 tintColor={Platform.select({
