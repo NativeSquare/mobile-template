@@ -1,12 +1,11 @@
 import { BottomSheetModal } from "@/components/custom/bottom-sheet";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { BottomSheetModal as GorhomBottomSheetModal } from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { Camera, Image, LucideIcon } from "lucide-react-native";
 import * as React from "react";
-import { Alert, Dimensions, Linking, View } from "react-native";
+import { Alert, Linking, Pressable, View } from "react-native";
 
 interface UploadMediaBottomSheetModalProps {
   bottomSheetModalRef: React.RefObject<GorhomBottomSheetModal | null>;
@@ -121,46 +120,40 @@ export function UploadMediaBottomSheetModal({
   > = {
     camera: {
       icon: Camera,
-      label: "Camera",
+      label: "Take Photo",
       onPress: handleTakePicture,
     },
     gallery: {
       icon: Image,
-      label: "Gallery",
+      label: "Upload From Gallery",
       onPress: handlePickFromGallery,
     },
   };
 
   const displayOptions = options.map((option) => optionMap[option]);
 
-  const screenWidth = Dimensions.get("window").width;
-  const padding = 32; // px-4 on each side (16px * 2)
-  const gap = 12; // gap-3
-  const itemCount = displayOptions.length;
-  const gapsTotal = (itemCount - 1) * gap;
-  const itemWidth = (screenWidth - padding - gapsTotal) / itemCount;
-
   return (
     <BottomSheetModal ref={bottomSheetModalRef}>
-      <View className="flex-row flex-wrap gap-3 px-4 pb-6 pt-3">
-        {displayOptions.map((option, index) => (
-          <Button
-            key={index}
-            variant="outline"
-            onPress={option.onPress}
-            style={{ width: itemWidth }}
-            className="aspect-square flex-col items-center justify-center gap-2 rounded-2xl border-border bg-card/60 px-3 py-4"
-          >
-            <Icon
-              as={option.icon}
-              size={26}
-              className="text-muted-foreground"
-            />
-            <Text className="mt-2 text-sm font-normal text-muted-foreground">
-              {option.label}
-            </Text>
-          </Button>
-        ))}
+      <View className="gap-4 px-4 pt-3.5">
+        <Text className="text-lg font-semibold text-foreground">
+          Select Media
+        </Text>
+        <View className="flex-row gap-3">
+          {displayOptions.map((option, index) => (
+            <Pressable
+              key={index}
+              onPress={option.onPress}
+              className="flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-card p-4"
+            >
+              <View className="size-9 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                <Icon as={option.icon} size={20} className="text-primary" />
+              </View>
+              <Text className="text-center text-xs font-medium text-foreground">
+                {option.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
     </BottomSheetModal>
   );

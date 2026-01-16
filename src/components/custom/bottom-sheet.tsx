@@ -19,8 +19,6 @@ export function BottomSheetModal({ ref, children }: BottomSheetModalProps) {
   const { colorScheme } = useColorScheme();
   const insets = useSafeAreaInsets();
 
-  const input = THEME[colorScheme ?? "light"].input;
-
   return (
     <GorhomBottomSheetModal
       ref={ref}
@@ -31,12 +29,18 @@ export function BottomSheetModal({ ref, children }: BottomSheetModalProps) {
             : THEME[colorScheme ?? "light"].background,
       }}
       handleIndicatorStyle={{
-        backgroundColor: THEME[colorScheme ?? "light"].secondary,
+        backgroundColor:
+          colorScheme === "dark"
+            ? THEME[colorScheme ?? "light"].secondary
+            : THEME[colorScheme ?? "light"].input,
         width: 40,
         height: 5,
       }}
       handleStyle={{
-        backgroundColor: colorScheme === "dark" ? "#121212" : input,
+        backgroundColor:
+          colorScheme === "dark"
+            ? "#121212"
+            : THEME[colorScheme ?? "light"].background,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
       }}
@@ -49,7 +53,7 @@ export function BottomSheetModal({ ref, children }: BottomSheetModalProps) {
         />
       )}
     >
-      <GorhomBottomSheetView className={`pb-[${insets.bottom}px]`}>
+      <GorhomBottomSheetView style={{ paddingBottom: insets.bottom + 10 }}>
         {children}
       </GorhomBottomSheetView>
     </GorhomBottomSheetModal>
