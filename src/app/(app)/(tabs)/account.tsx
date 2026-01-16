@@ -98,7 +98,7 @@ export default function Profile() {
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
-      contentContainerClassName="mt-safe p-4 pb-10 sm:p-6 gap-5"
+      contentContainerClassName="p-4 pb-10 sm:p-6 gap-5"
       keyboardDismissMode="interactive"
     >
       <View className="w-full max-w-2xl self-center gap-6">
@@ -130,7 +130,7 @@ export default function Profile() {
             {
               label: "Profile",
               icon: "person-outline",
-              onPress: () => router.push("/settings/edit"),
+              onPress: () => router.push("/account/edit"),
             },
             { label: "Billing", icon: "card-outline", onPress: () => {} },
           ]}
@@ -142,7 +142,7 @@ export default function Profile() {
             {
               label: "Appearance",
               icon: "color-palette-outline",
-              onPress: () => router.push("/settings/appearance"),
+              onPress: () => router.push("/account/appearance"),
             },
             { label: "Language", icon: "language-outline", onPress: () => {} },
           ]}
@@ -175,7 +175,7 @@ export default function Profile() {
             {
               label: "Send Feedback",
               icon: "chatbubbles-outline",
-              onPress: () => {},
+              onPress: () => router.push("/account/send-feedback"),
             },
           ]}
         />
