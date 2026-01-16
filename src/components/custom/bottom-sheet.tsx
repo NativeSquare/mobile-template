@@ -22,6 +22,7 @@ export function BottomSheetModal({ ref, children }: BottomSheetModalProps) {
   return (
     <GorhomBottomSheetModal
       ref={ref}
+      stackBehavior="replace"
       backgroundStyle={{
         backgroundColor:
           colorScheme === "dark"

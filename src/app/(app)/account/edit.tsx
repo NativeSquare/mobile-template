@@ -1,225 +1,162 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { NameField } from "@/components/app/account/name-field";
+import { ProfilePictureField } from "@/components/app/account/profile-picture-field";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
+import { useUploadImage } from "@/hooks/use-upload-image";
+import { getConvexErrorMessage } from "@/utils/getConvexErrorMessage";
+import { UserProfileSchema } from "@/validation/account";
 import { api } from "@convex/_generated/api";
-import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "convex/react";
-import * as ImagePicker from "expo-image-picker";
+import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "expo-router";
+import { ChevronLeft } from "lucide-react-native";
 import React from "react";
-import {
-  ActionSheetIOS,
-  ActivityIndicator,
-  Alert,
-  Platform,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
+import z from "zod";
+
+type ProfileFormData = {
+  name: string;
+  image: string | null;
+};
 
 export default function EditProfileScreen() {
   const router = useRouter();
   const user = useQuery(api.table.users.currentUser);
-  const [name, setName] = React.useState(user?.name ?? "");
-  const [photoUri, setPhotoUri] = React.useState<string | null>(
-    user?.image ?? null
-  );
-  const [isPickingPhoto, setIsPickingPhoto] = React.useState(false);
-  const [isSaving, setIsSaving] = React.useState(false);
+  const patchUser = useMutation(api.table.users.patch);
+  const { uploadImage, isUploading } = useUploadImage();
 
-  React.useEffect(() => {
-    setName(user?.name ?? "");
-    setPhotoUri(user?.image ?? null);
-  }, [user?.name, user?.image]);
+  const [formData, setFormData] = React.useState<ProfileFormData>({
+    name: user?.name ?? "",
+    image: user?.image ?? null,
+  });
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = React.useState<{
+    name?: string;
+    image?: string;
+  }>({});
 
   const hasChanges =
-    name.trim() !== (user?.name ?? "") ||
-    (photoUri ?? null) !== (user?.image ?? null);
+    formData.name.trim() !== (user?.name ?? "") ||
+    formData.image !== (user?.image ?? null);
 
-  const requestPermissions = React.useCallback(
-    async (source: "camera" | "library") => {
-      const permission =
-        source === "camera"
-          ? await ImagePicker.requestCameraPermissionsAsync()
-          : await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const handleSubmit = async () => {
+    setError(null);
+    setFieldErrors({});
 
-      if (!permission.granted) {
-        Alert.alert(
-          "Permission needed",
-          `Please allow access to your ${
-            source === "camera" ? "camera" : "photo library"
-          } to change your profile photo.`
-        );
-        return false;
-      }
-      return true;
-    },
-    []
-  );
+    const result = UserProfileSchema.safeParse(formData);
 
-  const pickImage = React.useCallback(
-    async (source: "camera" | "library") => {
-      const allowed = await requestPermissions(source);
-      if (!allowed) return;
+    if (!result.success) {
+      const tree = z.treeifyError(result.error);
 
-      setIsPickingPhoto(true);
-      try {
-        const result =
-          source === "camera"
-            ? await ImagePicker.launchCameraAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [1, 1],
-                quality: 0.9,
-              })
-            : await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [1, 1],
-                quality: 0.9,
-              });
-
-        if (!result.canceled && result.assets?.[0]?.uri) {
-          setPhotoUri(result.assets[0].uri);
-        }
-      } catch (error) {
-        console.error(error);
-        Alert.alert("Unable to pick image", "Please try again.");
-      } finally {
-        setIsPickingPhoto(false);
-      }
-    },
-    [requestPermissions]
-  );
-
-  const openPhotoActions = React.useCallback(() => {
-    if (Platform.OS === "ios") {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: ["Cancel", "Take Photo", "Choose From Library"],
-          cancelButtonIndex: 0,
-        },
-        (index) => {
-          if (index === 1) pickImage("camera");
-          if (index === 2) pickImage("library");
-        }
-      );
-    } else {
-      Alert.alert("Change photo", undefined, [
-        { text: "Take Photo", onPress: () => pickImage("camera") },
-        { text: "Choose From Library", onPress: () => pickImage("library") },
-        { text: "Cancel", style: "cancel" },
-      ]);
+      setFieldErrors({
+        name: tree.properties?.name?.errors?.[0],
+        image: tree.properties?.image?.errors?.[0],
+      });
+      setError(tree.errors?.[0] ?? null);
+      return;
     }
-  }, [pickImage]);
 
-  const handleSave = React.useCallback(async () => {
-    if (!hasChanges || isSaving) return;
-    setIsSaving(true);
+    if (!user?._id) {
+      setError("You must be logged in to update your profile");
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      // TODO: wire up to backend profile update mutation when available.
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      Alert.alert("Profile saved");
+      let imageUrl = formData.image;
+
+      // Upload image if it's a local file (not an HTTP URL)
+      if (imageUrl && !imageUrl.startsWith("http")) {
+        imageUrl = await uploadImage(imageUrl);
+      }
+
+      await patchUser({
+        id: user._id,
+        data: {
+          name: formData.name.trim(),
+          image: imageUrl ?? undefined,
+        },
+      });
+
       router.back();
+    } catch (err) {
+      setError(getConvexErrorMessage(err));
     } finally {
-      setIsSaving(false);
+      setIsLoading(false);
     }
-  }, [hasChanges, isSaving, router]);
+  };
+
+  const renderHeader = () => {
+    return (
+      <View className="flex-row items-center justify-between px-5 pt-6">
+        <Button variant="ghost" size="icon" onPress={() => router.back()}>
+          <Icon as={ChevronLeft} size={24} />
+        </Button>
+        <Text className="text-lg font-semibold">Edit Profile</Text>
+        <View className="size-6" />
+      </View>
+    );
+  };
+
+  const renderFooter = () => {
+    return (
+      <View className="gap-2">
+        {error && (
+          <Text className="text-sm text-destructive text-center">{error}</Text>
+        )}
+        <Button
+          className="w-full"
+          onPress={handleSubmit}
+          disabled={isLoading || isUploading || !hasChanges}
+        >
+          {isLoading || isUploading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text>Save</Text>
+          )}
+        </Button>
+      </View>
+    );
+  };
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      contentContainerClassName="mt-safe p-4 pb-10 sm:p-6 gap-5"
-      keyboardDismissMode="interactive"
-    >
-      <View className="w-full max-w-xl self-center gap-8">
-        <View className="flex-row items-center justify-between">
-          <Pressable
-            onPress={() => router.back()}
-            className="size-10 items-center justify-center -ml-2 rounded-full active:bg-secondary/70"
-            accessibilityLabel="Go back"
-            hitSlop={6}
-          >
-            <Ionicons
-              name="chevron-back"
-              size={24}
-              className="text-foreground"
-            />
-          </Pressable>
+    <View className="flex-1 mt-safe">
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerClassName="px-4 pb-6"
+      >
+        <View className="w-full max-w-md self-center flex flex-1 gap-6">
+          {renderHeader()}
 
-          <Text className="text-lg font-semibold">Edit Profile</Text>
+          <ProfilePictureField
+            image={formData.image}
+            name={formData.name}
+            onImageChange={(uri) =>
+              setFormData((prev) => ({ ...prev, image: uri }))
+            }
+            onImageRemove={() =>
+              setFormData((prev) => ({ ...prev, image: null }))
+            }
+            error={fieldErrors.image}
+          />
 
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={!hasChanges || isSaving}
-            className="px-2"
-            onPress={handleSave}
-          >
-            {isSaving ? (
-              <ActivityIndicator size="small" />
-            ) : (
-              <Text
-                className={cn(
-                  "text-base font-semibold",
-                  !hasChanges && "text-muted-foreground"
-                )}
-              >
-                Save
-              </Text>
-            )}
-          </Button>
-        </View>
-
-        <View className="items-center gap-3">
-          <View className="relative">
-            <Avatar alt={user?.name ?? "Guest"} className="size-32">
-              {photoUri ? (
-                <AvatarImage source={{ uri: photoUri }} />
-              ) : (
-                <AvatarFallback className="bg-secondary/80">
-                  <Text className="text-3xl font-semibold">
-                    {(name.trim()?.[0] ?? "🙂").toUpperCase()}
-                  </Text>
-                </AvatarFallback>
-              )}
-            </Avatar>
-
-            {isPickingPhoto && (
-              <View className="absolute inset-0 items-center justify-center rounded-full bg-background/70">
-                <ActivityIndicator />
-              </View>
-            )}
-
-            <Pressable
-              onPress={openPhotoActions}
-              className="absolute -bottom-1.5 -right-1.5 active:scale-95"
-              accessibilityLabel="Change profile photo"
-              hitSlop={8}
-            >
-              <View className="size-11 items-center justify-center rounded-full bg-background shadow-sm shadow-black/10 border border-border">
-                <Ionicons name="camera" size={18} className="text-foreground" />
-              </View>
-            </Pressable>
-          </View>
-          <Text className="text-muted-foreground text-sm">Profile Photo</Text>
-        </View>
-
-        <View className="gap-2">
-          <Text className="text-xs font-semibold uppercase tracking-[0.4px] text-muted-foreground">
-            Name
-          </Text>
-          <Input
-            value={name}
-            onChangeText={setName}
-            placeholder="John Smith"
-            autoCapitalize="words"
-            returnKeyType="done"
+          <NameField
+            value={formData.name}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, name: value }))
+            }
+            error={fieldErrors.name}
           />
         </View>
+      </ScrollView>
+      <View className="w-full max-w-md self-center px-4 pb-4 mb-safe">
+        {renderFooter()}
       </View>
-    </ScrollView>
+    </View>
   );
 }

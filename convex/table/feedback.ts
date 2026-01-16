@@ -6,14 +6,14 @@ const documentSchema = {
   userId: v.id("users"),
   type: v.string(),
   feedbackText: v.string(),
-  feedbackImages: v.optional(v.array(v.id("_storage"))),
+  feedbackImages: v.optional(v.array(v.string())),
 };
 
 const partialSchema = {
   userId: v.optional(v.id("users")),
   type: v.optional(v.string()),
   feedbackText: v.optional(v.string()),
-  feedbackImages: v.optional(v.array(v.id("_storage"))),
+  feedbackImages: v.optional(v.array(v.string())),
 };
 
 export const feedback = defineTable(documentSchema)
