@@ -1,24 +1,25 @@
-import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { useAuthActions } from "@convex-dev/auth/react";
-import { api } from "@convex/_generated/api";
-import { useQuery } from "convex/react";
 import { ScrollView, View } from "react-native";
 
 export default function Home() {
-  const user = useQuery(api.table.users.currentUser);
-  const { signOut } = useAuthActions();
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
       contentContainerClassName="sm:flex-1 items-center justify-center p-4 py-8 sm:py-4 sm:p-6"
       keyboardDismissMode="interactive"
+      contentInsetAdjustmentBehavior="automatic"
     >
-      <View className="w-full max-w-sm">
-        <Text>Hi, {user?.email}</Text>
-        <Button onPress={() => signOut()}>
-          <Text>Sign Out</Text>
-        </Button>
+      <View className="items-center gap-4 max-w-sm">
+        <View className="w-16 h-16 rounded-2xl bg-muted items-center justify-center">
+          <Text className="text-3xl">🏠</Text>
+        </View>
+        <Text className="text-xl font-semibold text-foreground text-center">
+          Your Home Screen
+        </Text>
+        <Text className="text-muted-foreground text-center leading-relaxed">
+          This is a template project. Replace this placeholder with your app's
+          main content — dashboards, feeds, or whatever fits your needs.
+        </Text>
       </View>
     </ScrollView>
   );

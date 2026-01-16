@@ -52,6 +52,7 @@ export default function Account() {
         keyboardShouldPersistTaps="handled"
         contentContainerClassName="p-4 pb-10 sm:p-6 gap-5"
         keyboardDismissMode="interactive"
+        contentInsetAdjustmentBehavior="automatic"
       >
         <View className="w-full max-w-2xl self-center gap-6">
           <Text variant="h3" className="text-left">
